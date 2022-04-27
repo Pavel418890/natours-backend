@@ -1,0 +1,78 @@
+from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator, MaxValueValidator
+from rest_framework import serializers
+
+from apps.reviews.api.v1.serializers.tour_review import BaseTourReviewSerializer
+from apps.users.api.v1.serializers import BaseUserSerializer
+from apps.natours.services.tours_crud import TourCRUDService, Tour
+from ..serializers.locations import LocationsSerializer, StartLocationSerializer
+
+from ..serializers.tour_image import TourImageSerializer
+
+User = get_user_model()
+
+
+class StartDatesSerializer(serializers.Serializer):
+    start_date = serializers.DateTimeField()
+
+
+class BaseTourSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    slug = serializers.SlugField(read_only=True)
+    name = serializers.CharField()
+    image_cover = serializers.ImageField()
+    max_group_size = serializers.IntegerField()
+    difficulty = serializers.ChoiceField(choices=Tour.DIFFICULTY_CHOICES)
+    price = serializers.DecimalField(max_digits=7, decimal_places=2)
+    summary = serializers.CharField()
+    description = serializers.CharField()
+    secret_tour = serializers.BooleanField()
+    duration = serializers.IntegerField(validators=[
+        MinValueValidator(1), MaxValueValidator(31)
+    ],
+        error_messages={'duration': 'Max tour duration - one month.'}
+    )
+
+    tours_crud = TourCRUDService()
+
+
+class CreateTourSerializer(BaseTourSerializer):
+
+    def create(self, validated_data):
+        """
+        Вызывает метод создания нового тура, после валидации данных запроса
+        """
+        return self.tours_crud.create_new_tour(validated_data)
+
+
+class UpdateTourSerializer(BaseTourSerializer):
+
+    def get_fields(self):
+        fields = super().get_fields()
+        for fields_instance in fields.values():
+            fields_instance.required = False
+        return fields
+
+    def update(self, tour, validated_data):
+        """
+        Вызывает метод обновления данных тура
+        """
+        return self.tours_crud.update_tour(tour, validated_data)
+
+
+class GetAllTourSerializer(BaseTourSerializer):
+    start_locations = StartLocationSerializer(many=True)
+    locations = LocationsSerializer(many=True)
+    start_dates = StartDatesSerializer(many=True)
+    ratings_avg = serializers.DecimalField(
+        max_digits=2,
+        decimal_places=1,
+        read_only=True
+    )
+    ratings_quantity = serializers.IntegerField(read_only=True)
+
+
+class GetTourSerializer(GetAllTourSerializer):
+    images = TourImageSerializer(many=True, required=False)
+    guides = BaseUserSerializer(many=True)
+    reviews = BaseTourReviewSerializer(many=True, required=False)

@@ -1,0 +1,13 @@
+.idea
+venv
+media
+.envs
+.k8s
+*/**/__pycache__
+*/**/.pyc
+*/.pyc
+.vscode
+*/**/static
+*/**/media
+src/apps/logs
+*/**/nohup.out
