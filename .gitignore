@@ -1,6 +1,5 @@
 .idea
 venv
-media
 .envs
 .k8s
 */**/__pycache__
