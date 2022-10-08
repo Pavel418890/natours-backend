@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  broker:
+    env_file:
+      - .envs/.env.dev
+    ports:
+      - 15672:15672
+
+  db:
+    env_file: .envs/.env.db.dev
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+
+
+  flower:
+    entrypoint: ['/home/app/src/commands/entrypoint.flower.sh']
+    env_file:
+      - .envs/.env.dev
+    ports:
+      - 5555:5555
+    volumes:
+      - ./src:/home/app/src/
+
+  reverseproxy:
+    ports:
+      - 8888:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - webserver_static:/home/app/src/static
+      - webserver_media:/home/app/src/media
+
+  webserver:
+    entrypoint: [ './commands/entrypoint.dev.sh' ]
+    env_file:
+      - .envs/.env.dev
+    volumes:
+      - ./src:/home/app/src/
+      - webserver_static:/home/app/src/static
+      - webserver_media:/home/app/src/media
+
+ 
+  worker:
+    entrypoint: ['/home/app/src/commands/entrypoint.celery.sh']
+    env_file:
+      - .envs/.env.dev
+    volumes:
+      - ./src:/home/app/src/
+
+  
+volumes:
+  db:
+  webserver_media:
+  webserver_static:
+
