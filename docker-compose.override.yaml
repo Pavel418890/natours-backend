@@ -33,7 +33,7 @@ services:
       - webserver_media:/home/app/src/media
 
   webserver:
-    entrypoint: [ './commands/entrypoint.dev.sh' ]
+    entrypoint: [ '/home/app/src/commands/entrypoint.dev.sh' ]
     env_file:
       - .envs/.env.dev
     volumes:

@@ -23,18 +23,16 @@ COPY --from=builder /app/wheels /wheels
 # install dependencies
 RUN apt update && \
     apt install -y netcat && \
-    pip install --no-cache  /wheels/*  
-
-# make sure that static and media folder before mount volume
-# owner will be changed at the finish builing image
-RUN mkdir -p /home/app/{static,media} && \
+    pip install --no-cache  /wheels/* && \
+    # owner will be changed at the finish builing image 
     addgroup --system --gid 1000 app &&\
     adduser --system --gid 1000 --uid 1000 app
 
-WORKDIR /home/app
+WORKDIR /home/app/src
 
 # copy project
 COPY src .
+COPY media/*.jpg media/
 
 # grant privilege
 RUN chown -R 1000:1000 . && chmod +x ./commands/*.sh
