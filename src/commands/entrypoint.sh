@@ -12,7 +12,7 @@ python manage.py collectstatic --no-input --clear
 
 # run server
 gunicorn -w $((2 * $(nproc) + 1 )) \
-  -b 0.0.0.0:8888 \
+  -b 0.0.0.0:80 \
   --log-level=error \
   wsgi:application
 

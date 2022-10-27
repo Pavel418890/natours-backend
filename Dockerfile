@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -U pip setuptools wheel && \
 FROM python:3.10.2-slim-buster
 
 ENV PYTHONUNBUFFERED 1
-
+ARG PROJECT_PATH=/usr/src/natours
 # copy from first layer pip wheels dependencies
 COPY --from=builder /app/wheels /wheels
 
@@ -28,7 +28,7 @@ RUN apt update && \
     addgroup --system --gid 1000 app &&\
     adduser --system --gid 1000 --uid 1000 app
 
-WORKDIR ${PROJECT_PATH?Variable not set}
+WORKDIR ${PROJECT_PATH}
 
 # copy project
 COPY src .
