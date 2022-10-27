@@ -3,57 +3,64 @@ version: '3.9'
 services:
   broker:
     env_file:
-      - .envs/.env.dev
+    - .envs/.env.dev
     ports:
-      - 15672:15672
+    - 15672:15672
 
   db:
     env_file: .envs/.env.db.dev
     ports:
-      - 5432:5432
+    - 5432:5432
     volumes:
-      - db:/var/lib/postgresql/data
+    - db:/var/lib/postgresql/data
 
 
   flower:
     entrypoint: ['${PROJECT_PATH?Variable not set}/commands/entrypoint.flower.sh']
     env_file:
-      - .envs/.env.dev
+    - .envs/.env.dev
     ports:
-      - 5555:5555
+    - 5555:5555
     volumes:
-      - ./src:/home/app/src/
-    args:
-      INSTALL_DEV: ${INSTALL_DEV-true}
+    - ./src:${PROJECT_PATH?Variable not set}
+    build:
+      context: .
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-true}
 
   reverseproxy:
+    command: /bin/bash -c "envsubst < ./nginx/nginx.conf > /etc/nginx/nginx.conf && exec nginx -g 'daemon off;'"
     ports:
-      - 8888:80
+    - 8888:80
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - webserver_static:/home/app/src/static
-      - webserver_media:/home/app/src/media
+    - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    - webserver_static:${PROJECT_PATH?Variable not set}/static
+    - webserver_media:${PROJECT_PATH?Variable not set}/media
 
   webserver:
     entrypoint: [ '${PROJECT_PATH?Variable not set}/commands/entrypoint.dev.sh' ]
     env_file:
-      - .envs/.env.dev
+    - .envs/.env.dev
     volumes:
-      - ./src:/home/app/src/
-      - webserver_static:/home/app/src/static
-      - webserver_media:/home/app/src/media
-    args:
-      INSTALL_DEV: ${INSTALL_DEV-true}
+    - ./src:${PROJECT_PATH?Variable not set}
+    - webserver_static:${PROJECT_PATH?Variable not set}/static
+    - webserver_media:${PROJECT_PATH?Variable not set}/media
+    build:
+      context: .
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-true}
 
  
   worker:
     entrypoint: ['${PROJECT_PATH?Variable not set}/commands/entrypoint.celery.sh']
     env_file:
-      - .envs/.env.dev
+    - .envs/.env.dev
     volumes:
-      - ./src:/home/app/src/
-    args:
-      INSTALL_DEV: ${INSTALL_DEV-true}
+    - ./src:${PROJECT_PATH?Variable not set}
+    build:
+      context: .
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-true}
 
   
 volumes:
