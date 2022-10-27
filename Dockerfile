@@ -28,7 +28,7 @@ RUN apt update && \
     addgroup --system --gid 1000 app &&\
     adduser --system --gid 1000 --uid 1000 app
 
-WORKDIR /home/app/src
+WORKDIR ${PROJECT_PATH?Variable not set}
 
 # copy project
 COPY src .

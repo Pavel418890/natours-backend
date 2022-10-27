@@ -16,13 +16,15 @@ services:
 
 
   flower:
-    entrypoint: ['/home/app/src/commands/entrypoint.flower.sh']
+    entrypoint: ['${PROJECT_PATH?Variable not set}/commands/entrypoint.flower.sh']
     env_file:
       - .envs/.env.dev
     ports:
       - 5555:5555
     volumes:
       - ./src:/home/app/src/
+    args:
+      INSTALL_DEV: ${INSTALL_DEV-true}
 
   reverseproxy:
     ports:
@@ -33,21 +35,25 @@ services:
       - webserver_media:/home/app/src/media
 
   webserver:
-    entrypoint: [ '/home/app/src/commands/entrypoint.dev.sh' ]
+    entrypoint: [ '${PROJECT_PATH?Variable not set}/commands/entrypoint.dev.sh' ]
     env_file:
       - .envs/.env.dev
     volumes:
       - ./src:/home/app/src/
       - webserver_static:/home/app/src/static
       - webserver_media:/home/app/src/media
+    args:
+      INSTALL_DEV: ${INSTALL_DEV-true}
 
  
   worker:
-    entrypoint: ['/home/app/src/commands/entrypoint.celery.sh']
+    entrypoint: ['${PROJECT_PATH?Variable not set}/commands/entrypoint.celery.sh']
     env_file:
       - .envs/.env.dev
     volumes:
       - ./src:/home/app/src/
+    args:
+      INSTALL_DEV: ${INSTALL_DEV-true}
 
   
 volumes:
