@@ -93,9 +93,9 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = '/var/www/%s/static' % os.environ.get("DOMAIN")
 STATIC_URL = 'static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/var/www/%s/media' % os.environ.get("DOMAIN")
 MEDIA_URL = 'media/'
 FILE_UPLOAD_MAX_MEMORY_SIZE = 6291456
 
@@ -143,18 +143,19 @@ STRIPE_PRIVATE_KEY = os.environ.get('STRIPE_PRIVATE_KEY')
 STRIPE_WEBHOOK_SECRET_KEY = os.environ.get('STRIPE_WEBHOOK_SECRET_KEY')
 
 
-BROKER_URL = 'amqp://{}:{}@{}:{}//'.format(
+RABBIT_DSN = 'amqp://{}:{}@{}:{}//'.format(
     os.environ.get('RABBITMQ_DEFAULT_USER'),
     os.environ.get('RABBITMQ_DEFAULT_PASS'),
-    os.environ.get('BROKER_HOST'),
-    os.environ.get('BROKER_PORT')
+    os.environ.get('RABBITMQ_HOST'),
+    os.environ.get('RABBITMQ_PORT')
 
 )
 
-RESULT_BACKEND_URL = "redis://{}:{}/0".format(
-    os.environ.get('RESULT_BACKEND_HOST'),
-    os.environ.get('RESULT_BACKEND_PORT')
+REDIS_DSN = "redis://{}:{}/0".format(
+    os.environ.get('REDIS_HOST'),
+    os.environ.get('REDIS_PORT')
 )
 # Frontend integration settings
 CLIENT_BASE_URL = os.environ.get('CLIENT_BASE_URL')
 CORS_ALLOWED_ORIGINS = (os.environ.get('CORS_ALLOWED_ORIGINS').split(';'))
+
