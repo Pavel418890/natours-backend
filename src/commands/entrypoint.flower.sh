@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
 
 echo "Waiting for Postgres..."
 
@@ -10,12 +11,12 @@ echo "Postgres started"
 
 echo "Waiting for RabbitMQ..."
 
-while ! nc -z $BROKER_HOST $BROKER_PORT; do
+while ! nc -z $RABBITMQ_HOST $RABBITMQ_PORT; do
   sleep 0.1
 done
 
 echo "RabbitMQ started"
 
-celery  -A apps.config flower
+celery  -A apps.config flower --concurrency=3
 
 exec "$@"

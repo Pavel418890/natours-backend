@@ -2,5 +2,5 @@ import os
 
 from django.conf import settings
 
-broker_url = settings.BROKER_URL
-result_backend = settings.RESULT_BACKEND_URL
+broker_url = settings.RABBIT_DSN
+result_backend = settings.REDIS_DSN
