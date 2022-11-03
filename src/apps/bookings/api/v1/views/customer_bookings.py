@@ -1,9 +1,10 @@
 from rest_framework import request, response, status, views
 
+from apps.bookings.services import booking_customer
 from apps.common.permissions import IsUser
 
 from ..serializers.booking_tour import TourBookingSerializer
-from apps.bookings.services import booking_customer
+
 
 class CustomerBookingsView(views.APIView):
     permission_classes = (IsUser,)

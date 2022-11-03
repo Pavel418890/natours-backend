@@ -7,11 +7,15 @@ from rest_framework.views import APIView
 from apps.common.permissions import IsAdmin, IsOwner
 from apps.users import services
 from apps.users.api.v1.serializers.users import (
-    SignUpSerializer, GetAllUsersSerializer, UpdateUserEmailSerializer, 
-    ConfirmUserEmailSerializer, ResetPasswordSerializer, 
-    UpdatePasswordSerializer, GetUserByIdSerializer,
+    BaseUserSerializer,
+    ConfirmUserEmailSerializer,
+    GetAllUsersSerializer,
+    GetUserByIdSerializer,
+    ResetPasswordSerializer,
+    SignUpSerializer,
+    UpdatePasswordSerializer,
+    UpdateUserEmailSerializer,
 )
-from apps.users.api.v1.serializers.users import BaseUserSerializer
 from apps.users.services.users_crud import UserCRUDService
 
 

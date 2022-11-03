@@ -1,12 +1,11 @@
 from rest_framework import serializers
-from apps.users.api.v1.serializers import SignedUser
-from apps.users.api.v1.serializers.profile import ProfileSerializer
 from rest_framework_simplejwt.serializers import PasswordField
 
 from apps.common.validators import FieldsPairEqualityValidator
 from apps.users import services
+from apps.users.api.v1.serializers import SignedUser
+from apps.users.api.v1.serializers.profile import ProfileSerializer
 from apps.users.models import User
-
 
 
 class BaseUserSerializer(serializers.Serializer):

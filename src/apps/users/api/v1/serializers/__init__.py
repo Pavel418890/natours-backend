@@ -24,5 +24,3 @@ class UserType(TypedDict):
 class SignedUser(TypedDict):
     user: UserType
     token: TokenPair
-
-

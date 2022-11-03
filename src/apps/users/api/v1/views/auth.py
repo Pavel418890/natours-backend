@@ -5,7 +5,9 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from apps.users.api.v1.serializers.auth import (
-    ForgotPasswordSerializer, RefreshJWTSerializer, SignInSerializer
+    ForgotPasswordSerializer,
+    RefreshJWTSerializer,
+    SignInSerializer,
 )
 
 

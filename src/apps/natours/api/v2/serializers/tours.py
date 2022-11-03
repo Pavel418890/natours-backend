@@ -3,12 +3,13 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from rest_framework import serializers
 
 from apps.natours import models, services
+from apps.natours.api.v2.serializers.locations import (
+    LocationsSerializer,
+    StartLocationSerializer,
+)
+from apps.natours.api.v2.serializers.tour_image import TourImageSerializer
 from apps.reviews.api.v1.serializers.tour_review import BaseTourReviewSerializer
 from apps.users.api.v1.serializers.users import BaseUserSerializer
-from apps.natours.api.v2.serializers.locations import LocationsSerializer, StartLocationSerializer
-from apps.natours.api.v2.serializers.tour_image import TourImageSerializer
-
-
 
 User = get_user_model()
 

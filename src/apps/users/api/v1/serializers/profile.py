@@ -11,8 +11,6 @@ class ProfileSerializer(serializers.Serializer):
     last_name = serializers.CharField(allow_null=True, required=False)
     photo = serializers.ImageField(read_only=True, use_url=True)
 
-
-class UpdateUserProfileSerializer(ProfileSerializer):
     def update(
         self, profile: Profile, validated_data: dict[str, InMemoryUploadedFile]
     ) -> Profile:

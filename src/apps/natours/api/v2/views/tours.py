@@ -3,8 +3,10 @@ from rest_framework import permissions, request, response, status, views
 from apps.common.permissions import IsAdmin, IsGuide, IsLeadGuide
 from apps.natours import services
 from apps.natours.api.v2.serializers.tours import (
-    CreateTourSerializer, GetTourSerializer, UpdateTourSerializer, 
-    GetListTourSerializer
+    CreateTourSerializer,
+    GetListTourSerializer,
+    GetTourSerializer,
+    UpdateTourSerializer,
 )
 
 

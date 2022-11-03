@@ -5,8 +5,8 @@ from rest_framework.exceptions import ValidationError
 
 from apps.reviews import models, services
 from apps.reviews.api.v1.serializers.base_review import BaseReviewSerializer
-from apps.users.api.v1.serializers.users import BaseUserSerializer
 from apps.users.api.v1.serializers import SignedUser
+from apps.users.api.v1.serializers.users import BaseUserSerializer
 
 
 class TourReviewType(TypedDict):

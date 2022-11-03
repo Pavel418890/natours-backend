@@ -5,12 +5,12 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CON
 from rest_framework.views import APIView
 
 from apps.common.permissions import IsAdmin, IsOwner, IsUser
-from apps.reviews.api.v1.serializers.tour_review import (
-    BaseTourReviewSerializer, UpdateReviewOnTourSerializer,
-    CreateReviewOnTourSerializer
-)
 from apps.reviews import services
-
+from apps.reviews.api.v1.serializers.tour_review import (
+    BaseTourReviewSerializer,
+    CreateReviewOnTourSerializer,
+    UpdateReviewOnTourSerializer,
+)
 
 
 class GetAllReviewsOnTourView(APIView):

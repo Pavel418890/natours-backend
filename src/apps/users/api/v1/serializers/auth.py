@@ -7,7 +7,6 @@ from apps.users.api.v1.serializers.users import BaseUserSerializer
 from . import UserType
 
 
-
 class SignInSerializer(serializers.Serializer):
     token = serializers.DictField(read_only=True)
     email = serializers.EmailField(write_only=True)
