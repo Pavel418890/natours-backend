@@ -36,7 +36,9 @@ class TourCRUDService:
             else:
                 tours = tours.get(id=filter[0])
         if order_by:
-            tours = tours.order_by(order_by)
+            if isinstance(order_by, str):
+                tours = tours.order_by(order_by)
+            tours = tours.order_by(*order_by)
         return tours
 
     @property

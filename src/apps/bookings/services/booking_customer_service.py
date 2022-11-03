@@ -51,7 +51,7 @@ class BookingCustomerService:
     #         )
     #     return result.fetchall()
 
-    def get_customer_bookings(customer: User):
+    def get_customer_bookings(self, customer: User):
         models.Booking.objects.prefetch_related(
             Prefetch("tour", queryset=natours.get_multi_tours())
         ).filter(user_id=customer.id, is_paid=True)
