@@ -1,8 +1,8 @@
+import functools
+import time
 from typing import Callable
 
 from django.db import connection, reset_queries
-import time
-import functools
 
 
 def query_debugger(func):
@@ -33,5 +33,7 @@ def permissions_classes(permission_classes_iterable: list | tuple) -> Callable:
             self.permission_classes = permission_classes_iterable
             self.check_permissions(self.request)
             return request(self, *args, **kwargs)
+
         return inner
+
     return decorator

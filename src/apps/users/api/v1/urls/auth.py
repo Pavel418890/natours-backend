@@ -1,41 +1,28 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework_simplejwt.views import TokenVerifyView
 
-from ..views.auth import (
-    SignInView,
-    RefreshJWTView,
-    ForgotPasswordView,
-)
+from apps.users.api.v1.views import auth
 
 auth_url_pattern = (
     [
+        path(route="signin/", view=auth.SignInView.as_view(), name="login"),
         path(
-            route='signin/',
-            view=SignInView.as_view(),
-            name='login'
+            route="refresh-token/",
+            view=auth.RefreshJWTView.as_view(),
+            name="refresh-access-token",
         ),
         path(
-            route='refresh-token/',
-            view=RefreshJWTView.as_view(),
-            name='refresh-access-token'
+            route="verify-token/", view=TokenVerifyView.as_view(), name="verify-token"
         ),
         path(
-            route='verify-token/',
-            view=TokenVerifyView.as_view(),
-            name='verify-token'
+            route="forgot-password/",
+            view=auth.ForgotPasswordView.as_view(),
+            name="forgot-password",
         ),
-
-        path(
-            route='forgot-password/',
-            view=ForgotPasswordView.as_view(),
-            name='forgot-password'
-        ),
-
-
     ],
-    'auth'
+    "auth",
 )
 
 urlpatterns = [
-    path('auth/', include(auth_url_pattern)),
+    path("auth/", include(auth_url_pattern)),
 ]

@@ -3,8 +3,10 @@ from typing import Optional, TypedDict
 
 from rest_framework import serializers
 
-from apps.users.services.authentication import TokenPair
-from .profile import ProfileSerializer
+from apps.users.api.v1.serializers.auth import *
+from apps.users.api.v1.serializers.profile import *
+from apps.users.api.v1.serializers.users import *
+from apps.users.services import TokenPair
 
 
 class UserProfile(TypedDict):
@@ -33,6 +35,7 @@ class BaseUserSerializer(serializers.Serializer):
     """
     класс представления пользователя
     """
+
     id = serializers.IntegerField(read_only=True)
     email = serializers.EmailField(read_only=True)
     role = serializers.CharField(read_only=True)

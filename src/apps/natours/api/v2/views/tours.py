@@ -1,66 +1,53 @@
-from rest_framework.status import (
-    HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
-)
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.request import Request
-from rest_framework.response import Response
+from rest_framework import permissions, request, response, status, views
 
-from apps.common.permissions import IsAdmin, IsGuide, IsLeadGuide, IsUser
-from apps.natours.services.tours_crud import TourCRUDService, Tour
-from ..serializers.tours import (
-    GetAllTourSerializer,
-    GetTourSerializer,
-    CreateTourSerializer,
-    UpdateTourSerializer
-)
-
-TourCRUDService = TourCRUDService()
+from apps.common.permissions import IsAdmin, IsGuide, IsLeadGuide
+from apps.natours import services
+from apps.natours.api.v2 import serializers
 
 
-class CreateUpdateTourView(APIView):
+class CreateUpdateTourView(views.APIView):
     permission_classes = [IsLeadGuide | IsGuide | IsAdmin]
 
-    def post(self, request: Request) -> Response:
-        serializer = CreateTourSerializer(data=request.data)
+    def post(self, request: request.Request) -> response.Response:
+        serializer = serializers.CreateTourSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(serializer.data, HTTP_201_CREATED)
+            return response.Response(serializer.data, status.HTTP_201_CREATED)
 
     def put(self, request, **params):
-        tour = TourCRUDService.get_tour(params)
-        serializer = UpdateTourSerializer(tour, request.data)
+        tour = services.natours.get_tour(params)
+        serializer = serializers.UpdateTourSerializer(tour, request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(serializer.data, HTTP_200_OK)
+            return response.Response(serializer.data, status.HTTP_200_OK)
 
 
-class GetTourView(APIView):
-    permissions_classes = (IsAuthenticated,)
+class GetTourView(views.APIView):
+    permissions_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request: Request, **params) -> Response:
+    def get(self, request: request.Request, **params) -> response.Response:
         if any(params):
-            tour = TourCRUDService.get_complete_tour_info(params)
-            serializer = GetTourSerializer(tour)
-            return Response(serializer.data, HTTP_200_OK)
+            tour = services.natours.get_complete_tour_info(params)
+            serializer = serializers.GetTourSerializer(tour)
+            return response.Response(serializer.data, status.HTTP_200_OK)
 
 
-class GetAllTourView(APIView):
-    permission_classes = (AllowAny,)
+class GetAllTourView(views.APIView):
+    permission_classes = (permissions.AllowAny,)
 
-    def get(self, request: Request) -> Response:
-        serializer = GetAllTourSerializer(
-            TourCRUDService.client_presentation_tours, many=True
+    def get(self, request: request.Request) -> response.Response:
+        serializer = serializers.GetAllTourSerializer(
+            services.natours.client_presentation_tours, many=True
         )
-        return Response(serializer.data, status=HTTP_200_OK)
+        return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class DeleteTourView(APIView):
-    permissions_classes = (IsAdmin | IsLeadGuide)
+class DeleteTourView(views.APIView):
+    permissions_classes = IsAdmin | IsLeadGuide
 
     def delete(self, request, **params):
-        TourCRUDService.delete_tour(params)
-        return Response(
-            {'success': True, 'message': 'Delete tour was successful.'},
-            HTTP_204_NO_CONTENT
+        services.natours.delete_tour(params)
+        return response.Response(
+            {"success": True, "message": "Delete tour was successful."},
+            status.HTTP_204_NO_CONTENT,
         )

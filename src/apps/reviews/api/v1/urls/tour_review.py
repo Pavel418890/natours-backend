@@ -1,24 +1,21 @@
 from django.urls import path
-from ..views.tour_review import (
-    GetUpdateDeleteTourReviewView,
-    GetAllReviewsOnTourView,
-    CreateReviewOnTourView
-)
+
+from apps.reviews.api.v1.views import tour_review
 
 urlpatterns = [
     path(
-        'reviews/<int:tour_id>/',
-        GetAllReviewsOnTourView.as_view(),
-        name='tour-reviews'
+        "reviews/<int:tour_id>/",
+        tour_review.GetAllReviewsOnTourView.as_view(),
+        name="tour-reviews",
     ),
     path(
-        'tours/<int:tour_id>/review/',
-        CreateReviewOnTourView.as_view(),
-        name='new-tour-review'
+        "tours/<int:tour_id>/review/",
+        tour_review.CreateReviewOnTourView.as_view(),
+        name="new-tour-review",
     ),
     path(
-        'review-detail/<int:review_id>/',
-        GetUpdateDeleteTourReviewView.as_view(),
-        name='review-detail'
+        "review-detail/<int:review_id>/",
+        tour_review.GetUpdateDeleteTourReviewView.as_view(),
+        name="review-detail",
     ),
 ]

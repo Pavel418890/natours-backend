@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 class BaseReviewSerializer(serializers.Serializer):
     """Abstract"""
+
     id = serializers.IntegerField(read_only=True)
     review = serializers.CharField(read_only=True)
     rating = serializers.IntegerField(read_only=True)
@@ -12,7 +13,6 @@ class BaseReviewSerializer(serializers.Serializer):
 
 class GetAllReviews(BaseReviewSerializer):
     """Класс администрирования отзывов"""
+
     def validate(self, data):
-        NotImplemented('In future.')
-
-
+        NotImplemented("In future.")

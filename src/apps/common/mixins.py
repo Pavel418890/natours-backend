@@ -5,6 +5,7 @@ class MultipleFieldLookupMixin:
     """
     Позволяет во View использовать несколько полей для поиска модели в БД
     """
+
     def get_object(self):
         queryset = self.get_queryset()
         queryset = self.filter_queryset(queryset)

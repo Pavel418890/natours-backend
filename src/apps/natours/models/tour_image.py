@@ -11,8 +11,7 @@ class TourImage(models.Model):
     )
 
     class Meta:
-        db_table = 'tour_images'
+        db_table = "tour_images"
 
     def __str__(self):
         return f"{self.image.url}"
-

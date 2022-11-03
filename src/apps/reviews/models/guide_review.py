@@ -1,3 +1,2 @@
 class GuideReview:
-    NotImplemented('Future feature...')
-
+    NotImplemented("Future feature...")

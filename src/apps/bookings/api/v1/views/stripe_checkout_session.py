@@ -2,12 +2,12 @@ from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.common.permissions import IsUser
 from apps.bookings.services.stripe import Stripe
+from apps.common.permissions import IsUser
 
 
 class StripeCheckoutSessionView(APIView):
-    permission_classes = (IsUser, )
+    permission_classes = (IsUser,)
 
     stripe = Stripe()
 

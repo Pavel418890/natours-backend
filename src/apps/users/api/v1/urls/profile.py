@@ -1,24 +1,19 @@
 from django.urls import include, path
 
-from ..views.profile import UpdateUserProfileView, UpdateProfilePhotoView
+from apps.users.api.v1.views.profile import UpdateUserProfileView
 
 profile_url_pattern = (
     [
+        path(route="", view=UpdateUserProfileView.as_view(), name="update-profile"),
         path(
-            route='',
+            route="update-photo/",
             view=UpdateUserProfileView.as_view(),
-            name='update-profile'
+            name="update-profile-photo",
         ),
-        path(
-            route='update-photo/',
-            view=UpdateProfilePhotoView.as_view(),
-            name='update-profile-photo'
-        )
-
     ],
-    'profile'
+    "profile",
 )
 
 urlpatterns = [
-    path('profile/', include(profile_url_pattern)),
+    path("profile/", include(profile_url_pattern)),
 ]

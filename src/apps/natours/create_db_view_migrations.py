@@ -3,7 +3,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('natours', '0001_initial'),
+        ("natours", "0001_initial"),
     ]
 
     operations = [
@@ -63,6 +63,13 @@ class Migration(migrations.Migration):
             ORDER BY num_tours_starts DESC
             LIMIT 12
             );        
+            """
+        ),
+        migrations.RunSQL(
+            """
+            CREATE MATERIALIZED VIEW tour_info AS (
+                WITH tour 
+            )
             """
         ),
     ]

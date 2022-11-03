@@ -16,30 +16,27 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
 from django.http.response import HttpResponse
+from django.urls import include, path
 
-from .views import ProtectedDefaultRoute
 from apps.users.tasks import check
 
+from .views import ProtectedDefaultRoute
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('protected/', ProtectedDefaultRoute.as_view()),
-    path('healthz/', lambda request: HttpResponse()),
-    path('worker-check/', lambda request: check.delay(0, 0)),
-
-    path('v2/tours/', include('apps.natours.api.v2.urls.tours')),
-    path('v2/reports/', include('apps.natours.api.v2.urls.reports')),
-    path('v1/', include('apps.reviews.api.v1.urls.tour_review')),
-    path('v1/', include('apps.users.api.v1.urls.auth')),
-    path('v1/', include('apps.users.api.v1.urls.users')),
-    path('v1/', include('apps.users.api.v1.urls.profile')),
-    path('v1/', include('apps.bookings.api.v1.urls.booking_tours')),
+    path("admin/", admin.site.urls),
+    path("protected/", ProtectedDefaultRoute.as_view()),
+    path("healthz/", lambda request: HttpResponse()),
+    path("worker-check/", lambda request: check.delay(0, 0)),
+    path("v2/tours/", include("apps.natours.api.v2.urls.tours")),
+    path("v2/reports/", include("apps.natours.api.v2.urls.reports")),
+    path("v1/", include("apps.reviews.api.v1.urls.tour_review")),
+    path("v1/", include("apps.users.api.v1.urls.auth")),
+    path("v1/", include("apps.users.api.v1.urls.users")),
+    path("v1/", include("apps.users.api.v1.urls.profile")),
+    path("v1/", include("apps.bookings.api.v1.urls.booking_tours")),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(
-        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-    )
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # urlpatterns += [path('silk/', include('silk.urls', namespace='silk'))]

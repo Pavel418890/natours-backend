@@ -1,16 +1,15 @@
-from django.http import HttpResponseBadRequest, JsonResponse
-
-from rest_framework import generics, views, status
+from django.http import HttpResponseBadRequest
+from rest_framework import generics, status, views
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from apps.common.mixins import MultipleFieldLookupMixin
 from apps.common.permissions import IsAdmin, IsGuide, IsLeadGuide, IsUser
-from ..serializers.tours import (
+from apps.natours.api.v1.serializers.tours import (
     CreateTourSerializer,
-    UpdateTourSerializer,
     GetAllTourSerializer,
-    GetTourSerializer
+    GetTourSerializer,
+    UpdateTourSerializer,
 )
 from apps.natours.models import Tour
 
@@ -31,7 +30,7 @@ class GetTourView(MultipleFieldLookupMixin, generics.RetrieveAPIView):
     permission_classes = [IsUser | IsAdmin]
     queryset = Tour.objects.filter(secret_tour=False)
     serializer_class = GetTourSerializer
-    lookup_fields = ['pk', 'slug']
+    lookup_fields = ["pk", "slug"]
 
 
 class UpdateDeleteTour(generics.UpdateAPIView, generics.DestroyAPIView):
@@ -61,8 +60,6 @@ class Top5CheapTourAPIView(views.APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        if request.method == 'GET':
-            return Response(
-                data=Tour.report.top_5_cheap(), status=status.HTTP_200_OK
-            )
-        return HttpResponseBadRequest('Something went wrong')
+        if request.method == "GET":
+            return Response(data=Tour.report.top_5_cheap(), status=status.HTTP_200_OK)
+        return HttpResponseBadRequest("Something went wrong")

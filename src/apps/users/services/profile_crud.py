@@ -1,37 +1,41 @@
-from typing import Dict
+from typing import Dict, Union
 
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction
 
-
-from ..models import Profile
-from apps.common.utils import Singleton
-from apps.services.image_thumbnail_creator \
-    import thumbnail_image, InMemoryUploadedFile
+from apps.services.image_thumbnail_creator import thumbnail_image
+from apps.users.models import Profile, User
 
 
-class ProfileCRUDService(metaclass=Singleton):
+class ProfileCRUDService:
+    def create_user_profile(
+        self, user: User, data: Dict[str, Union[str, InMemoryUploadedFile]]
+    ) -> Profile:
+        """Создает профиль пользователя"""
+        first_name = data.pop("first_name", None)
+        last_name = data.pop("last_name", None)
+        photo = data.pop("photo", None)
+        return Profile.objects.create(
+            user=user, first_name=first_name, last_name=last_name, photo=photo
+        )
 
     def update_user_profile(
-            self, user_profile: Profile, updated_fields: Dict[str, str]
+        self, user_profile: Profile, updated_fields: Dict[str, str]
     ) -> Profile:
         """
         Изменяет данные профиля пользователя, согласно переданным данным
         Возвращет пользователя с обновленными данными
         """
         user_profile.first_name = updated_fields.get(
-            'first_name', user_profile.first_name
+            "first_name", user_profile.first_name
         )
-        user_profile.last_name = updated_fields.get(
-            'last_name', user_profile.last_name
-        )
+        user_profile.last_name = updated_fields.get("last_name", user_profile.last_name)
         user_profile.save()
         return user_profile
 
     @transaction.atomic
     def update_user_photo(
-            self,
-            user_profile: Profile,
-            received_from_user_image: InMemoryUploadedFile
+        self, user_profile: Profile, received_from_user_image: InMemoryUploadedFile
     ) -> Profile:
         """
         Вызывает создание миниатурного изображения для
@@ -47,3 +51,6 @@ class ProfileCRUDService(metaclass=Singleton):
         user_profile.save()
         profile = user_profile
         return profile
+
+
+profile = ProfileCRUDService()
