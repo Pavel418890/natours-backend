@@ -2,10 +2,10 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import PasswordField, TokenRefreshSerializer
 
 from apps.users import services
+from apps.users.api.v1.serializers.users import BaseUserSerializer
 
-from . import BaseUserSerializer, UserType
+from . import UserType
 
-__all__ = ["SignInSerializer", "RefreshJWTSerializer", "ForgotPasswordSerializer"]
 
 
 class SignInSerializer(serializers.Serializer):

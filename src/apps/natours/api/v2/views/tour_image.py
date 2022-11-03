@@ -4,7 +4,7 @@ from apps.common.permissions import IsAdmin, IsGuide, IsLeadGuide
 from apps.natours.models.tour import Tour
 from apps.natours.models.tour_image import TourImage
 
-from ..serializers.tour_image import TourImageSerializer
+from apps.natours.api.v1.serializers.tour_image import TourImageSerializer
 
 
 class TourImageAPIView(generics.CreateAPIView, generics.RetrieveDestroyAPIView):

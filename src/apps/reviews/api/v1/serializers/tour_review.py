@@ -3,8 +3,10 @@ from typing import Optional, TypedDict
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from apps.reviews import api, models, services
-from apps.users.api.v1.serializers.users import BaseUserSerializer, SignedUser
+from apps.reviews import models, services
+from apps.reviews.api.v1.serializers.base_review import BaseReviewSerializer
+from apps.users.api.v1.serializers.users import BaseUserSerializer
+from apps.users.api.v1.serializers import SignedUser
 
 
 class TourReviewType(TypedDict):
@@ -15,12 +17,12 @@ class TourReviewType(TypedDict):
     tour_id: int
 
 
-class BaseTourReviewSerializer(api.v1.serializers.BaseReviewSerializer):
+class BaseTourReviewSerializer(BaseReviewSerializer):
     user = BaseUserSerializer(read_only=True)
     tour_id = serializers.IntegerField(read_only=True)
 
 
-class CreateReviewOnTourSerializer(api.v1.serializers.BaseReviewSerializer):
+class CreateReviewOnTourSerializer(BaseReviewSerializer):
     review = serializers.CharField()
     rating = serializers.IntegerField()
     user = BaseUserSerializer(read_only=True)
@@ -36,7 +38,7 @@ class CreateReviewOnTourSerializer(api.v1.serializers.BaseReviewSerializer):
         return new_review
 
 
-class UpdateReviewOnTourSerializer(api.v1.serializers.BaseReviewSerializer):
+class UpdateReviewOnTourSerializer(BaseReviewSerializer):
     review = serializers.CharField(required=False)
     rating = serializers.IntegerField(required=False)
 

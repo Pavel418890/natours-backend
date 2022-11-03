@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from apps.natours.api.v2.serializers import GetListTourSerializer
-from apps.users.api.v1.serializers import BaseUserSerializer
+from apps.natours.api.v2.serializers.tours import GetListTourSerializer
+from apps.users.api.v1.serializers.users import BaseUserSerializer
 
 
 class TourBookingSerializer(serializers.Serializer):

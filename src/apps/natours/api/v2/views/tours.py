@@ -2,21 +2,24 @@ from rest_framework import permissions, request, response, status, views
 
 from apps.common.permissions import IsAdmin, IsGuide, IsLeadGuide
 from apps.natours import services
-from apps.natours.api.v2 import serializers
+from apps.natours.api.v2.serializers.tours import (
+    CreateTourSerializer, GetTourSerializer, UpdateTourSerializer, 
+    GetListTourSerializer
+)
 
 
 class CreateUpdateTourView(views.APIView):
     permission_classes = [IsLeadGuide | IsGuide | IsAdmin]
 
     def post(self, request: request.Request) -> response.Response:
-        serializer = serializers.CreateTourSerializer(data=request.data)
+        serializer = CreateTourSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return response.Response(serializer.data, status.HTTP_201_CREATED)
 
     def put(self, request, **params):
         tour = services.natours.get_tour(params)
-        serializer = serializers.UpdateTourSerializer(tour, request.data)
+        serializer = UpdateTourSerializer(tour, request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return response.Response(serializer.data, status.HTTP_200_OK)
@@ -28,7 +31,7 @@ class GetTourView(views.APIView):
     def get(self, request: request.Request, **params) -> response.Response:
         if any(params):
             tour = services.natours.get_complete_tour_info(params)
-            serializer = serializers.GetTourSerializer(tour)
+            serializer = GetTourSerializer(tour)
             return response.Response(serializer.data, status.HTTP_200_OK)
 
 
@@ -36,7 +39,7 @@ class GetAllTourView(views.APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request: request.Request) -> response.Response:
-        serializer = serializers.GetAllTourSerializer(
+        serializer = GetListTourSerializer(
             services.natours.client_presentation_tours, many=True
         )
         return response.Response(serializer.data, status=status.HTTP_200_OK)

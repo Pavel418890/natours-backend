@@ -3,22 +3,14 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from rest_framework import serializers
 
 from apps.natours import models, services
-from apps.reviews.api.v1.serializers import BaseTourReviewSerializer
-from apps.users.api.v1.serializers import BaseUserSerializer
+from apps.reviews.api.v1.serializers.tour_review import BaseTourReviewSerializer
+from apps.users.api.v1.serializers.users import BaseUserSerializer
+from apps.natours.api.v2.serializers.locations import LocationsSerializer, StartLocationSerializer
+from apps.natours.api.v2.serializers.tour_image import TourImageSerializer
 
-from . import LocationsSerializer, StartLocationSerializer, TourImageSerializer
+
 
 User = get_user_model()
-
-
-__all__ = [
-    "StartDatesSerializer",
-    BaseTourSerializer,
-    CreateTourSerializer,
-    UpdateTourSerializer,
-    GetListTourSerializer,
-    GetTourSerializer,
-]
 
 
 class StartDatesSerializer(serializers.Serializer):

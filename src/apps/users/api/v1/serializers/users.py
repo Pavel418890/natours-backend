@@ -1,21 +1,25 @@
 from rest_framework import serializers
+from apps.users.api.v1.serializers import SignedUser
+from apps.users.api.v1.serializers.profile import ProfileSerializer
 from rest_framework_simplejwt.serializers import PasswordField
 
 from apps.common.validators import FieldsPairEqualityValidator
 from apps.users import services
 from apps.users.models import User
 
-from . import BaseUserSerializer, SignedUser
 
-__all__ = [
-    "GetAllUsersSerializer",
-    "GetUserByIdSerializer",
-    "UpdatePasswordSerializer",
-    "ConfirmUserEmailSerializer",
-    "ResetPasswordSerializer",
-    "SignUpSerializer",
-    "UpdateUserEmailSerializer",
-]
+
+class BaseUserSerializer(serializers.Serializer):
+    """
+    класс представления пользователя
+    """
+
+    id = serializers.IntegerField(read_only=True)
+    email = serializers.EmailField(read_only=True)
+    role = serializers.CharField(read_only=True)
+    profile = ProfileSerializer(read_only=True)
+    is_email_confirmed = serializers.CharField(read_only=True)
+    last_login = serializers.DateTimeField(read_only=True)
 
 
 class GetAllUsersSerializer(BaseUserSerializer):

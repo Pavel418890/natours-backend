@@ -4,14 +4,14 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
 from apps.common.permissions import IsAdmin, IsOwner
-from apps.users.api.v1 import serializers
+from apps.users.api.v1.serializers.profile import UpdateUserProfileSerializer
 
 
 class UpdateUserProfileView(APIView):
     permission_classes = [IsOwner | IsAdmin]
 
     def put(self, request: Request) -> Response:
-        serializer = serializers.UpdateUserProfileSerializer(
+        serializer = UpdateUserProfileSerializer(
             request.user.profile, request.FILES
         )
         serializer.is_valid(raise_exception=True)

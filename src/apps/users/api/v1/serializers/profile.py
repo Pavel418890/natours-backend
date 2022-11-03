@@ -4,8 +4,6 @@ from rest_framework import serializers
 from apps.users import services
 from apps.users.models import Profile
 
-__all__ = ["ProfileSerializer", "UpdateUserProfileSerializer"]
-
 
 class ProfileSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)

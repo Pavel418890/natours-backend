@@ -6,8 +6,12 @@ from rest_framework.views import APIView
 
 from apps.common.permissions import IsAdmin, IsOwner
 from apps.users import services
-from apps.users.api.v1 import serializers
-from apps.users.api.v1.serializers import BaseUserSerializer
+from apps.users.api.v1.serializers.users import (
+    SignUpSerializer, GetAllUsersSerializer, UpdateUserEmailSerializer, 
+    ConfirmUserEmailSerializer, ResetPasswordSerializer, 
+    UpdatePasswordSerializer, GetUserByIdSerializer,
+)
+from apps.users.api.v1.serializers.users import BaseUserSerializer
 from apps.users.services.users_crud import UserCRUDService
 
 
@@ -15,7 +19,7 @@ class SignUpView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request: Request) -> Response:
-        serializer = serializers.SignUpSerializer(data=request.data)
+        serializer = SignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, HTTP_201_CREATED)
@@ -26,7 +30,7 @@ class GetAllUsersView(APIView):
 
     def get(self, request: Request) -> Response:
         users, count = UserCRUDService().get_all_users()
-        serializer = serializers.GetAllUsersSerializer(users, many=True)
+        serializer = GetAllUsersSerializer(users, many=True)
         return Response({"result": count, "data": serializer.data}, HTTP_200_OK)
 
 
@@ -34,7 +38,7 @@ class GetUserByIdView(APIView):
     permission_classes = [IsAdmin]
 
     def get(self, request: Request, pk: int) -> Response:
-        serializer = serializers.GetUserByIdSerializer(data={"id": pk})
+        serializer = GetUserByIdSerializer(data={"id": pk})
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, HTTP_200_OK)
 
@@ -43,14 +47,14 @@ class GetUserView(APIView):
     permission_classes = [IsOwner]
 
     def get(self, request: Request) -> Response:
-        return Response(serializers.BaseUserSerializer(request.user).data, HTTP_200_OK)
+        return Response(BaseUserSerializer(request.user).data, HTTP_200_OK)
 
 
 class UpdateUserEmailView(APIView):
     permission_classes = [IsOwner]
 
     def put(self, request: Request) -> Response:
-        serializer = serializers.UpdateUserEmailSerializer(request.user, request.data)
+        serializer = UpdateUserEmailSerializer(request.user, request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, HTTP_200_OK)
@@ -60,7 +64,7 @@ class ConfirmUserEmailView(APIView):
     permission_classes = [IsOwner]
 
     def put(self, request: Request, email_confirmation_token) -> Response:
-        serializer = serializers.ConfirmUserEmailSerializer(
+        serializer = ConfirmUserEmailSerializer(
             instance=request.user,
             data={"email_confirmation_token": email_confirmation_token},
         )
@@ -75,7 +79,7 @@ class UpdatePasswordView(APIView):
     permission_classes = [IsOwner]
 
     def put(self, request: Request, *args, **kwargs) -> Response:
-        serializer = serializers.UpdatePasswordSerializer(
+        serializer = UpdatePasswordSerializer(
             instance=self.request.user, data=request.data
         )
         serializer.is_valid(raise_exception=True)
@@ -90,7 +94,7 @@ class ResetPasswordView(APIView):
     permission_classes = [AllowAny]
 
     def put(self, request, password_reset_token):
-        serializer = serializers.ResetPasswordSerializer(
+        serializer = ResetPasswordSerializer(
             data={**request.data, "password_reset_token": password_reset_token}
         )
         serializer.is_valid(raise_exception=True)
