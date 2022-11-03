@@ -13,9 +13,6 @@ class ProfileSerializer(serializers.Serializer):
 
 
 class UpdateUserProfileSerializer(ProfileSerializer):
-
-    photo = serializers.ImageField()
-
     def update(
         self, profile: Profile, validated_data: dict[str, InMemoryUploadedFile]
     ) -> Profile:
