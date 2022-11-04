@@ -1,15 +1,11 @@
 from django.urls import include, path
 
-from apps.users.api.v1.views.profile import UpdateUserProfileView
+from ..views.profile import UpdateUserProfileView, UpdateProfilePhotoView
 
 profile_url_pattern = (
     [
         path(route="", view=UpdateUserProfileView.as_view(), name="update-profile"),
-        path(
-            route="update-photo/",
-            view=UpdateUserProfileView.as_view(),
-            name="update-profile-photo",
-        ),
+        path(route="update-photo/", view=UpdateProfilePhotoView.as_view(), name="update-profile-photo", ),
     ],
     "profile",
 )

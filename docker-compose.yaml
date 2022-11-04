@@ -1,0 +1,122 @@
+version: '3.9'
+
+services:
+  rabbit:
+    container_name: rabbit
+    image: rabbitmq:3.11.2-management
+    restart: on-failure
+    networks:
+      - backend
+    env_file:
+      - ../.envs/.env.dev
+    ports:
+      - 15672:15672
+
+  pg:
+    build:
+      context: ../postgres
+    container_name: pg
+    networks:
+      - backend
+    ports:
+      - 5432:5432
+    restart: on-failure
+    env_file: ../.envs/.env.db.dev
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  flower:
+    container_name: flower
+    depends_on:
+      - celeryworker
+      - rabbit
+    image: plots418890/natours_backend
+    networks:
+      - backend
+    restart: on-failure
+    entrypoint:
+      ['${PROJECT_PATH?Variable not set}/commands/entrypoint.flower.sh']
+    env_file:
+      - ../.envs/.env.dev
+    ports:
+      - 5555:5555
+    volumes:
+      - backend_src:${PROJECT_PATH?Variable not set}
+
+  redis:
+    container_name: redis
+    depends_on:
+      - rabbit
+      - backend
+      - celeryworker
+    entrypoint: ['redis-server']
+    image: redis:7.0-rc-alpine
+    networks:
+      - backend
+    restart: on-failure
+
+  backend:
+    entrypoint: ['${PROJECT_PATH?Variable not set}/commands/entrypoint.dev.sh']
+    build:
+      context: .
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-true}
+        PROJECT_PATH_ARG: ${PROJECT_PATH?Variable not set}
+        DOMAIN_ARG: ${DOMAIN-localhost}
+    container_name: backend
+    ports:
+      - 8000:80
+    env_file:
+      - ../.envs/.env.dev
+    depends_on:
+      - pg
+      - rabbit
+    image: plots418890/natours_backend
+    networks:
+      - backend
+    restart: on-failure
+    volumes:
+      - backend_src:${PROJECT_PATH?Variable not set}
+      - webserver_static:${PROJECT_PATH?Variable not set}/static
+      - webserver_media:${PROJECT_PATH?Variable not set}/media
+
+  celeryworker:
+    container_name: celeryworker
+    entrypoint:
+      ['${PROJECT_PATH?Variable not set}/commands/entrypoint.celery.sh']
+    env_file:
+      - ../.envs/.env.dev
+    volumes:
+      - backend_src:${PROJECT_PATH?Variable not set}
+    depends_on:
+      - rabbit
+      - pg
+    image: plots418890/natours_backend
+    networks:
+      - backend
+    restart: on-failure
+
+volumes:
+  pgdata:
+  backend_src:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PROJECT_PATH?Variable not set}/backend/src/
+      o: bind
+  webserver_media:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PROJECT_PATH?Variable not set}/backend/media/
+      o: bind
+  webserver_static:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PROJECT_PATH?Variable not set}/backend/static/
+      o: bind
+
+networks:
+  backend:
+    name: 'natours'
