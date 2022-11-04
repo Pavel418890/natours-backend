@@ -9,7 +9,7 @@ class ProfileSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     first_name = serializers.CharField(allow_null=True, required=False)
     last_name = serializers.CharField(allow_null=True, required=False)
-    photo = serializers.ImageField(read_only=True, use_url=True)
+    photo = serializers.ImageField(read_only=True, use_url=True, required=False)
 
     def update(
         self, profile: Profile, validated_data: dict[str, InMemoryUploadedFile]
