@@ -2,7 +2,7 @@ from typing import Iterable, Optional, Union
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.db.models import Avg, Count, F, Manager, Prefetch, QuerySet
+from django.db.models import Avg, Count, F, Manager, Prefetch 
 from django.db.models.functions import Round
 from django.utils.text import slugify
 
@@ -42,7 +42,7 @@ class TourCRUDService:
         return tours
 
     @property
-    def client_presentation_tours(self) -> list[Tour.objects]:
+    def client_presentation_tours(self) -> list[Tour]:
         """
         Возвращает 9 наиболее популярных туров для представления пользователю
         """
