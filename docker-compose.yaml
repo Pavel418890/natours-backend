@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   rabbit:
@@ -35,7 +35,7 @@ services:
       - backend
     restart: on-failure
     entrypoint:
-      ['${PROJECT_PATH?Variable not set}/commands/entrypoint.flower.sh']
+      ["${PROJECT_PATH?Variable not set}/commands/entrypoint.flower.sh"]
     env_file:
       - ../.envs/.env.dev
     ports:
@@ -49,14 +49,14 @@ services:
       - rabbit
       - backend
       - celeryworker
-    entrypoint: ['redis-server']
+    entrypoint: ["redis-server"]
     image: redis:7.0-rc-alpine
     networks:
       - backend
     restart: on-failure
 
   backend:
-    entrypoint: ['${PROJECT_PATH?Variable not set}/commands/entrypoint.dev.sh']
+    entrypoint: ["${PROJECT_PATH?Variable not set}/commands/entrypoint.dev.sh"]
     build:
       context: .
       args:
@@ -83,7 +83,7 @@ services:
   celeryworker:
     container_name: celeryworker
     entrypoint:
-      ['${PROJECT_PATH?Variable not set}/commands/entrypoint.celery.sh']
+      ["${PROJECT_PATH?Variable not set}/commands/entrypoint.celery.sh"]
     env_file:
       - ../.envs/.env.dev
     volumes:
@@ -119,4 +119,4 @@ volumes:
 
 networks:
   backend:
-    name: 'natours'
+    name: "natours"
