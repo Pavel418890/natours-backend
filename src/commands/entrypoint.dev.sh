@@ -21,6 +21,6 @@ cp \
 python manage.py migrate
 
 # run server
-python manage.py runserver 0.0.0.0:8888
+python manage.py runserver 0.0.0.0:80
 
 exec "$@"

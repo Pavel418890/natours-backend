@@ -1,4 +1,5 @@
 .idea
+media
 venv
 .envs
 .k8s
