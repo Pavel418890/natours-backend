@@ -52,7 +52,7 @@ RUN chown -R 1000:1000 . && chmod +x ./commands/*.sh
 USER natours
 
 LABEL org.opencontainers.image.created="${BUILD_DATE}" \
-      org.opencontainers.image.title="natours-api" \
+      org.opencontainers.image.title="natours-backend" \
       org.opencontainers.image.authors="Pavel Lots <plots418890@gmail.com>" \
       org.opencontainers.image.source="https://github.com/pavel418890/natours-backend" \
       org.opencontainers.image.revision="${VCS_REF}" \
