@@ -35,13 +35,13 @@ services:
       - backend
     restart: on-failure
     entrypoint:
-      ["${PROJECT_PATH?Variable not set}/commands/entrypoint.flower.sh"]
+      ["/usr/src/natours/commands/entrypoint.flower.sh"]
     env_file:
       - ../.envs/.env.dev
     ports:
       - 5555:5555
     volumes:
-      - backend_src:${PROJECT_PATH?Variable not set}
+      - backend_src:/usr/src/natours
 
   redis:
     container_name: redis
@@ -56,12 +56,12 @@ services:
     restart: on-failure
 
   backend:
-    entrypoint: ["${PROJECT_PATH?Variable not set}/commands/entrypoint.dev.sh"]
+    entrypoint: ["/usr/src/natours/commands/entrypoint.dev.sh"]
     build:
       context: .
       args:
         INSTALL_DEV: ${INSTALL_DEV-true}
-        PROJECT_PATH_ARG: ${PROJECT_PATH?Variable not set}
+        PROJECT_PATH_ARG: /usr/src/natours
         DOMAIN_ARG: ${DOMAIN-localhost}
     container_name: backend
     env_file:
@@ -74,9 +74,9 @@ services:
       - backend
     restart: on-failure
     volumes:
-      - backend_src:${PROJECT_PATH?Variable not set}
-      - webserver_static:${PROJECT_PATH?Variable not set}/static
-      - webserver_media:${PROJECT_PATH?Variable not set}/media
+      - backend_src:/usr/src/natours
+      - webserver_static:/usr/src/natours/static
+      - webserver_media:/usr/src/natours/media
   nginx:
     container_name: nginx
     depends_on:
@@ -97,11 +97,11 @@ services:
   celeryworker:
     container_name: celeryworker
     entrypoint:
-      ["${PROJECT_PATH?Variable not set}/commands/entrypoint.celery.sh"]
+      ["/usr/src/natours/commands/entrypoint.celery.sh"]
     env_file:
       - ../.envs/.env.dev
     volumes:
-      - backend_src:${PROJECT_PATH?Variable not set}
+      - backend_src:/usr/src/natours
     depends_on:
       - rabbit
       - pg
@@ -116,25 +116,25 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: ${PROJECT_PATH?Variable not set}/backend/src/
+      device: /usr/src/natours/backend/src/
       o: bind
   webserver_media:
     driver: local
     driver_opts:
       type: none
-      device: ${PROJECT_PATH?Variable not set}/backend/media/
+      device: /usr/src/natours/backend/media/
       o: bind
   webserver_static:
     driver: local
     driver_opts:
       type: none
-      device: ${PROJECT_PATH?Variable not set}/backend/static/
+      device: /usr/src/natours/backend/static/
       o: bind
   webroot:
     driver: local
     driver_opts:
       type: none
-      device: ${PROJECT_PATH?Variable not set}/frontend/dist/
+      device: /usr/src/natours/frontend/dist/
       o: bind
 
 networks:

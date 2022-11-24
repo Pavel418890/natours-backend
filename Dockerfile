@@ -11,14 +11,14 @@ RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; \
               -v \
               --no-cache-dir \
               --no-deps \
-              --wheel-dir=/app/wheels \
+              --wheel-dir=/natours/wheels \
               -r /requirements.dev.txt ; \
             else  \
               pip wheel \
               -v \
               --no-cache-dir \
               --no-deps   \
-              --wheel-dir=/app/wheels \
+              --wheel-dir=/natours/wheels \
               -r /requirements.txt ; \ 
             fi"
 
@@ -27,14 +27,11 @@ FROM python:3.10.2-slim-buster
 
 ENV PYTHONUNBUFFERED 1
 
-ARG PROJECT_PATH
 ARG DOMAIN
-
-ENV PROJECT_PATH=$PROJECT_PATH
 ENV DOMAIN=$DOMAIN
 
 # copy from first layer pip wheels dependencies
-COPY --from=builder /app/wheels /wheels
+COPY --from=builder /natours/wheels /wheels
 
 # install dependencies
 RUN apt update && \
@@ -42,10 +39,10 @@ RUN apt update && \
     pip install  -U setuptools pip wheel && \
     pip install  --no-cache-dir --no-deps  /wheels/* && \
     # owner will be changed at the finish builing image 
-    addgroup --system --gid 1000 app &&\
-    adduser --system --gid 1000 --uid 1000 app
+    addgroup --system --gid 1000 natours &&\
+    adduser --system --gid 1000 --uid 1000 natours
 
-WORKDIR ${PROJECT_PATH}
+WORKDIR /usr/src/natours/ 
 
 # copy project
 COPY src .
@@ -54,6 +51,6 @@ COPY src .
 RUN chown -R 1000:1000 . && chmod +x ./commands/*.sh
 
 # change owner
-USER app
+USER natours
 
 
