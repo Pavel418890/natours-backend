@@ -41,7 +41,9 @@ RUN apt update && \
     pip install  -U setuptools pip wheel && \
     pip install  --no-cache-dir --no-deps  /wheels/* && \
     # owner will be changed at the finish builing image 
-    addgroup --system --gid 1000 natours &&\ adduser --system --gid 1000 --uid 1000 natours WORKDIR /usr/src/natours/ 
+    addgroup --system --gid 1000 natours && adduser --system --gid 1000 --uid 1000 natours 
+
+WORKDIR /usr/src/natours/ 
 # copy project
 COPY src .
 
